@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>방과후 일지</title>
-<meta name="description" content="식단표·일정 사진과 메모를 올리고 달을 골라 '생성하기'를 누르면, 연결된 PC가 방과후 운영 일지(한글 hwpx)를 만들어 올려 줍니다. HEO Works 계정으로 로그인합니다.">
+<meta name="description" content="식단표·일정 사진과 메모를 올리고 달을 골라 '생성하기'를 누르면, 연결된 PC가 방과후 운영 일지(한글 hwpx)를 만들어 올려 줍니다.">
 <meta name="theme-color" content="#FFFFFF">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -51,6 +51,8 @@ main{max-width:880px;margin:0 auto;padding:24px 24px 80px}
 .gate{text-align:center;padding:48px 24px}
 .gate h1{font-size:1.75rem;margin:0 0 8px}
 .gate p{color:var(--muted);margin:0 0 24px}
+.login{max-width:320px;margin:0 auto;text-align:left}
+.sub{font-size:1rem;margin:24px 0 4px}
 .monthbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px}
 .monthbar .m{font-size:1.5rem;font-weight:700;min-width:150px;text-align:center}
 .monthbar .sp{flex:1}
@@ -65,7 +67,7 @@ main{max-width:880px;margin:0 auto;padding:24px 24px 80px}
 .drop.over{border-color:var(--blue);background:var(--blue-soft);color:var(--blue)}
 .drop strong{color:var(--ink)}
 .row{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap}
-textarea,input[type=text]{width:100%;border:1px solid var(--border);border-radius:var(--r-md);padding:10px 12px;background:var(--canvas);resize:vertical}
+textarea,input[type=text],input[type=password]{width:100%;border:1px solid var(--border);border-radius:var(--r-md);padding:10px 12px;background:var(--canvas);resize:vertical}
 textarea{min-height:84px}
 label.f{display:block;font-weight:600;font-size:.875rem;margin:12px 0 6px}
 .hint{color:var(--muted);font-size:.8125rem;margin-top:4px}
@@ -123,8 +125,12 @@ details summary{cursor:pointer;font-weight:600}
   <section class="card gate" id="gate" hidden>
     <h1>방과후 운영 일지</h1>
     <p>식단표·일정 사진과 메모를 올리고 달을 골라 <b>생성하기</b>를 누르면<br>연결된 PC가 한 달 일지(한글 파일)를 만들어 여기에 올려 줘요.</p>
-    <a class="btn primary" id="loginBtn" href="https://heoworks.pages.dev/#login=alog">HEO Works 계정으로 로그인</a>
-    <p class="hint" style="margin-top:16px">관리자가 허용한 계정만 쓸 수 있어요.</p>
+    <form class="login" id="loginForm">
+      <label class="f" for="lid">아이디</label><input type="text" id="lid" autocomplete="username" autocapitalize="off" spellcheck="false" maxlength="30" required>
+      <label class="f" for="lpw">비밀번호</label><input type="password" id="lpw" autocomplete="current-password" maxlength="200" required>
+      <button class="btn primary" type="submit" id="loginGo" style="width:100%;margin-top:16px">로그인</button>
+    </form>
+    <p class="hint" style="margin-top:16px">계정은 관리자에게 받으세요.</p>
   </section>
 
   <div id="app" hidden>
@@ -186,11 +192,32 @@ details summary{cursor:pointer;font-weight:600}
         <div class="hint">비워 두면 지난달 일지의 명단을 써요.</div>
         <label class="f" for="cRules">늘 지킬 요청</label><textarea id="cRules" maxlength="1000" placeholder="예) 관찰 장소는 행복2, 관찰 시간 16:00 이후, 간식 장면 쓰지 않기"></textarea>
         <div class="row" style="margin-top:12px"><button class="btn small" id="cfgSave">학급 정보 저장</button></div>
-        <div id="adminBox" hidden>
-          <label class="f" for="cUsers">사용 허용 계정(관리자만)</label>
-          <input type="text" id="cUsers" placeholder="아이디를 쉼표로 (관리자는 늘 허용)">
-          <div class="row" style="margin-top:8px"><button class="btn small" id="usersSave">허용 계정 저장</button></div>
-        </div>
+      </details>
+    </section>
+
+    <section class="card">
+      <details>
+        <summary>내 비밀번호 바꾸기</summary>
+        <form id="pwForm" style="max-width:360px">
+          <label class="f" for="pOld">지금 비밀번호</label><input type="password" id="pOld" autocomplete="current-password" maxlength="200" required>
+          <label class="f" for="pNew">새 비밀번호(6자 이상)</label><input type="password" id="pNew" autocomplete="new-password" minlength="6" maxlength="200" required>
+          <div class="row" style="margin-top:12px"><button class="btn small" type="submit">비밀번호 바꾸기</button></div>
+        </form>
+      </details>
+    </section>
+
+    <section class="card" id="adminBox" hidden>
+      <details>
+        <summary>계정 관리 (관리자)</summary>
+        <ul class="list" id="users"></ul>
+        <h3 class="sub">새 계정 만들기</h3>
+        <form id="userForm" class="row">
+          <input type="text" id="nId" placeholder="아이디(한글·영문 소문자·숫자·_)" maxlength="30" autocapitalize="off" spellcheck="false" required style="flex:1;min-width:160px">
+          <input type="text" id="nName" placeholder="이름" maxlength="30" style="flex:1;min-width:120px">
+          <input type="password" id="nPw" placeholder="처음 비밀번호(6자 이상)" autocomplete="new-password" minlength="6" maxlength="200" required style="flex:1;min-width:160px">
+          <button class="btn small primary" type="submit">계정 만들기</button>
+        </form>
+        <p class="hint">처음 비밀번호를 전해 주고, 로그인한 뒤 '내 비밀번호 바꾸기'로 바꾸게 하세요.</p>
       </details>
     </section>
   </div>
@@ -201,15 +228,15 @@ const LOCALHOST = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
 const ls = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
 const lset = (k, v) => { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
 const API = (LOCALHOST && ls('alog:api')) || 'https://exam-api.dawn-sea-4052.workers.dev';
-const PORTAL = (LOCALHOST && ls('alog:portal')) || 'https://heoworks.pages.dev/';
 const AK = 'alog:auth';
 const $ = s => document.querySelector(s);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 let auth = (() => { try { const a = JSON.parse(ls(AK) || 'null'); return a && a.token && a.exp > Date.now() ? a : null; } catch (e) { return null; } })();
 function setAuth(a) { auth = a; lset(AK, a ? JSON.stringify(a) : null); }
 const ERRS = {
-  network: '서버에 연결하지 못했어요', bad_token: '로그인이 끝났어요. 다시 로그인해 주세요', forbidden: '이 계정은 방과후 일지를 쓸 수 없어요(관리자에게 문의)',
-  sso_expired: '로그인 코드가 만료됐어요. 포털에서 다시 열어 주세요', bad_file: '파일을 올리지 못했어요(크기·형식)', bad_type: '지원하지 않는 파일이에요(사진·PDF·한글·글만)',
+  network: '서버에 연결하지 못했어요', bad_token: '로그인이 끝났어요. 다시 로그인해 주세요', forbidden: '관리자만 할 수 있어요',
+  bad_login: '아이디나 비밀번호가 맞지 않아요', locked: '로그인 시도가 너무 많아요. 15분 뒤에 다시 해 주세요', weak_pw: '비밀번호는 6자 이상이에요',
+  bad_id: '아이디는 한글·영문 소문자·숫자·_ 2~30자예요', self: '자기 계정은 그렇게 바꿀 수 없어요', bad_pw_old: '지금 비밀번호가 맞지 않아요', bad_file: '파일을 올리지 못했어요(크기·형식)', bad_type: '지원하지 않는 파일이에요(사진·PDF·한글·글만)',
   too_many: '이 달 자료가 너무 많아요(30개까지). 안 쓰는 자료를 지워 주세요', storage_full: '서버 저장 공간이 꽉 찼어요(관리자에게 문의)', req_limit: '오늘 할 수 있는 횟수를 다 썼어요',
   busy: '이미 만드는 중인 일지가 있어요. 끝난 뒤 다시 눌러 주세요', bad_month: '달을 다시 골라 주세요', empty: '내용이 비어 있어요', not_found: '찾지 못했어요(이미 지워졌을 수 있어요)',
 };
@@ -218,7 +245,7 @@ async function api(action, body) {
   try {
     const res = await fetch(API, { method: 'POST', body: JSON.stringify(Object.assign({ action }, body || {})), cache: 'no-store' });
     const r = await res.json();
-    if (r && (r.error === 'bad_token') && action !== 'ssoRedeem') loggedOut();
+    if (r && r.error === 'bad_token') loggedOut();
     return r || { ok: false, error: 'server' };
   } catch (e) { return { ok: false, error: 'network' }; }
 }
@@ -354,18 +381,44 @@ async function loadMe() {
   const r = await api('alogMe', { token: auth.token }); if (!r.ok) return;
   S.me = r; const c = r.cfg || {};
   $('#cCls').value = c.cls || ''; $('#cTeacher').value = c.teacher || ''; $('#cKids').value = c.kids || ''; $('#cRules').value = c.rules || '';
-  $('#adminBox').hidden = !r.admin; if (r.admin) $('#cUsers').value = (r.users || []).join(', ');
+  $('#adminBox').hidden = !r.admin; if (r.admin) renderUsers(r.users || []);
 }
-async function ssoFromHash() {
-  const m = location.hash.match(/^#sso=([A-Za-z0-9]{40})$/); if (!m) return;
-  history.replaceState(null, '', location.pathname + location.search);
-  const r = await api('ssoRedeem', { svc: 'alog', code: m[1] });
-  if (r.ok && r.token) { setAuth({ token: r.token, user: r.user, exp: Date.now() + 11.5 * 3600000 }); toast((r.user.name || r.user.id) + ' 님, 반가워요'); show(); }
-  else toast(errMsg(r.error));
+function renderUsers(list) {
+  $('#users').innerHTML = list.map(u => `<li><span class="ic"><svg class="i"><use href="#i-text"/></svg></span>
+    <div class="meta"><div class="t">${esc(u.name)} <span class="hint">(${esc(u.id)})</span></div>
+    <div class="s">${u.role === 'admin' ? '관리자' : '사용자'} · ${u.active ? '사용 중' : '사용 중지'}</div></div>
+    ${u.id === (auth && auth.user.id) ? '<span class="hint">나</span>' : `<button class="btn small" data-upw="${esc(u.id)}">비밀번호</button>
+    <button class="btn small" data-uact="${esc(u.id)}" data-on="${u.active ? 1 : 0}">${u.active ? '중지' : '다시 사용'}</button>
+    <button class="btn small ghost danger" data-udel="${esc(u.id)}" aria-label="계정 지우기"><svg class="i"><use href="#i-x"/></svg></button>`}</li>`).join('');
+}
+async function userAct(body, msg) {
+  const r = await api(body.action, Object.assign({ token: auth.token }, body));
+  if (!r.ok) return toast(r.error === 'too_many' ? '계정은 50개까지예요' : errMsg(r.error)), false;
+  renderUsers(r.users || []); toast(msg); return true;
 }
 
 /* ── 이벤트 ── */
-$('#loginBtn').href = PORTAL + '#login=alog';
+$('#loginForm').onsubmit = async e => {
+  e.preventDefault();
+  $('#loginGo').disabled = true;
+  const r = await api('alogLogin', { id: $('#lid').value.trim().toLowerCase(), pw: $('#lpw').value });
+  $('#loginGo').disabled = false;
+  if (!r.ok) return toast(errMsg(r.error));
+  $('#lpw').value = '';
+  setAuth({ token: r.token, user: r.user, exp: Date.now() + 11.5 * 3600000 });
+  toast((r.user.name || r.user.id) + ' 님, 반가워요'); show();
+};
+$('#pwForm').onsubmit = async e => {
+  e.preventDefault();
+  const r = await api('alogPwChange', { token: auth.token, old: $('#pOld').value, pw: $('#pNew').value });
+  if (!r.ok) return toast(errMsg(r.error));
+  setAuth(Object.assign({}, auth, { token: r.token })); $('#pOld').value = $('#pNew').value = '';
+  toast('비밀번호를 바꿨어요. 다른 기기는 다시 로그인해야 해요');
+};
+$('#userForm').onsubmit = async e => {
+  e.preventDefault();
+  if (await userAct({ action: 'alogUserSave', id: $('#nId').value.trim().toLowerCase(), name: $('#nName').value.trim(), pw: $('#nPw').value }, '계정을 만들었어요')) $('#nId').value = $('#nName').value = $('#nPw').value = '';
+};
 $('#prevM').onclick = () => shiftMonth(-1);
 $('#nextM').onclick = () => shiftMonth(1);
 $('#kinds').onclick = e => { const b = e.target.closest('button[data-k]'); if (!b) return; kind = b.dataset.k; $('#kinds').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); };
@@ -391,6 +444,13 @@ $('#gen').onclick = async () => {
   load();
 };
 document.addEventListener('click', async e => {
+  const ub = e.target.closest('button[data-upw],button[data-uact],button[data-udel]');
+  if (ub) {
+    if (ub.dataset.upw) { const pw = prompt(ub.dataset.upw + ' 의 새 비밀번호(6자 이상)'); if (pw) userAct({ action: 'alogUserSave', id: ub.dataset.upw, pw }, '비밀번호를 다시 정했어요'); }
+    else if (ub.dataset.uact) userAct({ action: 'alogUserSave', id: ub.dataset.uact, active: ub.dataset.on !== '1' }, ub.dataset.on === '1' ? '사용을 중지했어요' : '다시 쓸 수 있게 했어요');
+    else if (ub.dataset.udel && confirm(ub.dataset.udel + ' 계정과 그 자료·일지를 모두 지울까요? 되돌릴 수 없어요.')) userAct({ action: 'alogUserDel', id: ub.dataset.udel }, '계정을 지웠어요');
+    return;
+  }
   const b = e.target.closest('button[data-get],button[data-del],button[data-out],button[data-odel],button[data-cancel]'); if (!b) return;
   if (b.dataset.get) { const r = await api('alogGet', { token: auth.token, id: b.dataset.get }); if (!r.ok) return toast(errMsg(r.error));
     if (r.mime === 'text/plain') download(r.name + '.txt', btoa(unescape(encodeURIComponent(r.data))), 'text/plain'); else download(r.name, r.data, r.mime); }
@@ -403,17 +463,10 @@ $('#cfgSave').onclick = async () => {
   const r = await api('alogCfgSet', { token: auth.token, cfg: { cls: $('#cCls').value, teacher: $('#cTeacher').value, kids: $('#cKids').value, rules: $('#cRules').value } });
   toast(r.ok ? '학급 정보를 저장했어요' : errMsg(r.error));
 };
-$('#usersSave').onclick = async () => {
-  const ids = $('#cUsers').value.split(/[\s,]+/).filter(Boolean);
-  const r = await api('alogUsersSet', { token: auth.token, ids });
-  if (r.ok) { $('#cUsers').value = r.users.join(', '); toast('허용 계정을 저장했어요'); } else toast(errMsg(r.error));
-};
 $('#logout').onclick = () => { const t = auth && auth.token; setAuth(null); show(); if (t) api('alogLogout', { token: t }); };
 addEventListener('storage', e => { if (e.key === AK) { try { auth = JSON.parse(e.newValue || 'null'); } catch (x) { auth = null; } show(); } });
-addEventListener('hashchange', ssoFromHash);
 document.addEventListener('visibilitychange', () => { if (!document.hidden && auth) load(); });
 show();
-ssoFromHash();
 </script>
 </body>
 </html>
