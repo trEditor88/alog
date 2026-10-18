@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>방과후 일지 사용 설명서</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{--canvas:#FFFFFF;--parchment:#F5F5F7;--ink:#1D1D1F;--muted:#6E6E73;--border:#E0E0E0;--blue:#0066CC;--blue-focus:#0071E3;--red:#C0392B;--green:#15803D;
+  font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--canvas);color:var(--ink);font-size:1.0625rem;line-height:1.7;word-break:keep-all}
+a{color:var(--blue)} a:focus-visible{outline:2px solid var(--blue-focus);outline-offset:2px}
+.wrap{max-width:760px;margin:0 auto;padding:48px 20px 80px}
+h1{font-size:clamp(2rem,4vw,2.6rem);font-weight:600;letter-spacing:-0.02em;line-height:1.2;margin:0 0 12px}
+h2{font-size:1.5rem;font-weight:600;margin:56px 0 14px;padding-top:8px}
+h3{font-size:1.125rem;font-weight:600;margin:28px 0 8px}
+p{margin:0 0 12px} ol,ul{margin:0 0 14px;padding-left:22px} li{margin-bottom:6px}
+.lead{font-size:1.2rem;color:var(--muted)}
+.toc{background:var(--parchment);border-radius:18px;padding:20px 24px;margin:32px 0}
+.toc ol{margin:8px 0 0;columns:2;column-gap:28px} .toc a{text-decoration:none}
+.b{display:inline-block;padding:0 8px;border:1px solid var(--border);border-radius:6px;background:var(--parchment);font-size:0.9375rem;font-weight:600;white-space:nowrap}
+.note{border-left:3px solid var(--blue);background:var(--parchment);padding:12px 16px;border-radius:0 11px 11px 0;margin:14px 0;font-size:0.975rem}
+.warn{border-left-color:var(--red)}
+table{width:100%;border-collapse:collapse;font-size:0.95rem;margin:8px 0 16px}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--border);vertical-align:top}
+th{color:var(--muted);font-size:0.85rem;font-weight:600}
+.tbl{overflow-x:auto}
+footer{margin-top:56px;padding-top:16px;border-top:1px solid var(--border);font-size:0.875rem;color:var(--muted)}
+@media (max-width:640px){.toc ol{columns:1}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>방과후 일지 사용 설명서</h1>
+<p class="lead">식단표·일정 사진과 메모를 올리고 달을 골라 <b>생성하기</b>를 누르면, 연결된 PC가 그 달의 방과후 운영 일지(한글 파일)를 만들어 올려 줍니다.</p>
+
+<nav class="toc"><b>차례</b>
+<ol>
+<li><a href="#s1">로그인하기</a></li>
+<li><a href="#s2">달 고르기</a></li>
+<li><a href="#s3">자료 올리기</a></li>
+<li><a href="#s4">생성하기</a></li>
+<li><a href="#s5">만든 일지 받기</a></li>
+<li><a href="#s6">학급 정보</a></li>
+<li><a href="#s7">이럴 땐 이렇게</a></li>
+</ol></nav>
+
+<h2 id="s1">1. 로그인하기</h2>
+<ol>
+<li><a href="https://treditor88.github.io/alog/">방과후 일지 사이트</a>를 엽니다.</li>
+<li><span class="b">HEO Works 계정으로 로그인</span>을 누르고 로그인하면 바로 돌아옵니다.</li>
+</ol>
+<p>로그인은 12시간 동안 유지돼요. "이 계정은 쓸 수 없어요"가 나오면 관리자에게 문의하세요.</p>
+
+<h2 id="s2">2. 달 고르기</h2>
+<p>맨 위 <span class="b">‹</span> <span class="b">›</span> 로 만들 달을 고릅니다. 20일이 지나면 다음 달이 먼저 보여요. 오른쪽 표시가 <b>PC 연결됨</b>이면 바로 만들고, <b>PC 꺼짐</b>이면 PC가 켜질 때 이어서 만들어요.</p>
+
+<h2 id="s3">3. 자료 올리기</h2>
+<ul>
+<li>먼저 종류(<span class="b">식단표</span> <span class="b">일정·계획</span> <span class="b">관찰 메모</span> <span class="b">참고 자료</span> <span class="b">기타</span>)를 누르고, 사진이나 파일을 끌어다 놓거나 눌러서 고릅니다.</li>
+<li>사진(JPG·PNG), PDF, 한글 파일(.hwp·.hwpx), 글(.txt)을 올릴 수 있어요. 사진은 자동으로 줄여서 올라가요. 다른 파일은 한 개에 약 500KB까지예요.</li>
+<li><b>식단표</b>: 그 달 식단표 사진. 일지의 간식 칸은 식단표의 <b>'종일반'</b> 줄로 채워지고, 휴원일·공휴일 표시는 일지에서 빠져요. 글자가 잘 보이게 반듯하게 찍어 주세요.</li>
+<li><b>일정·계획</b>: "만들기 1) 잠자리 2) 허수아비 / 종이접기 1) 도토리 2) 감 / 게임 1) 엉덩이씨름 2) 딱지치기"처럼 적은 글이나 사진.</li>
+<li><b>관찰 메모</b>: 실제로 본 일을 짧게 적어 두면(예: "9/8 우주 떡볶이 맵다고 물 달라 함") 그날 관찰을 그 내용으로 다듬어 넣어요.</li>
+<li><b>참고 자료</b>: 예전에 쓴 일지 한글 파일 등.</li>
+<li>글로 바로 적고 싶으면 <span class="b">글로 적어서 올리기</span>를 펼쳐 쓰고 올리세요.</li>
+<li>한 달에 30개까지 올릴 수 있어요. 필요 없는 자료는 ✕ 로 지우세요.</li>
+</ul>
+
+<h2 id="s4">4. 생성하기</h2>
+<ol>
+<li><b>요청사항</b> 칸에 바라는 점을 적습니다. 예: "관찰 시간은 4시 이후, 간식 먹는 장면은 빼 주세요", "10/6은 재량휴업일이에요".</li>
+<li><span class="b">생성하기</span>를 누르면 PC가 자료와 <b>지난달 일지</b>를 바탕으로 이 달 일지를 만들어요. 보통 2~5분 걸려요.</li>
+<li>이미 만든 달에서 다시 누르면(<span class="b">다시 생성하기(고치기)</span>) 처음부터 새로 짜지 않고, 지난번 일지에 요청사항·새 자료만 반영해 고쳐요.</li>
+<li>만드는 중에는 진행 상황이 보이고, <span class="b">취소</span>로 멈출 수 있어요.</li>
+</ol>
+
+<h2 id="s5">5. 만든 일지 받기</h2>
+<ul>
+<li><b>만든 일지</b>에서 <span class="b">받기</span>를 누르면 <b>.hwpx</b> 파일이 내려받아져요. 한글(한컴오피스)에서 바로 열립니다. .hwp 가 필요하면 한글에서 '다른 이름으로 저장'으로 바꾸세요.</li>
+<li><span class="hint">반영한 내용</span>을 펼치면 무엇을 반영했는지와 <b>확인할 것</b>(흐린 글자 등)이 나와요. 꼭 한 번 확인하세요.</li>
+<li>달마다 최근 10개까지 남아요.</li>
+<li>관찰 내용은 초안이에요. 실제 관찰에 맞게 고쳐서 쓰세요.</li>
+</ul>
+
+<h2 id="s6">6. 학급 정보</h2>
+<p>맨 아래 <span class="b">학급 정보</span>를 펼쳐 학급명, 담당자, 아이 명단, 늘 지킬 요청을 저장해 두면 생성할 때마다 반영돼요. 아이 명단을 비워 두면 지난달 일지의 명단을 써요.</p>
+
+<h2 id="s7">7. 이럴 땐 이렇게</h2>
+<ul>
+<li><b>오래 '대기 중'이에요</b> — PC가 꺼져 있을 수 있어요. PC가 켜지면 이어서 만들어요.</li>
+<li><b>"만들지 못했어요"가 나와요</b> — 요청사항을 조금 바꿔 다시 눌러 보세요. 계속되면 관리자에게 문의하세요.</li>
+<li><b>간식이 이상해요</b> — 식단표 사진이 흐리면 잘못 읽을 수 있어요. 더 선명한 사진을 올리거나 요청사항에 맞는 간식을 적고 다시 생성하세요.</li>
+<li><b>로그인이 풀렸어요</b> — 다시 로그인하면 올린 자료와 만든 일지는 그대로 있어요.</li>
+</ul>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>방과후 일지</title>
+<meta name="description" content="식단표·일정 사진과 메모를 올리고 달을 골라 '생성하기'를 누르면, 연결된 PC가 방과후 운영 일지(한글 hwpx)를 만들어 올려 줍니다. HEO Works 계정으로 로그인합니다.">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{
+  --canvas:#FFFFFF; --parchment:#F5F5F7; --pearl:#FAFAFC;
+  --ink:#1D1D1F; --muted:#6E6E73;
+  --hairline:rgba(0,0,0,0.10); --border:#E0E0E0;
+  --blue:#0066CC; --blue-focus:#0071E3; --blue-soft:#EAF3FC;
+  --green:#15803D; --green-soft:#EAF6EE; --red:#C0392B; --red-soft:#FCEDEB; --amber:#B45309; --amber-soft:#FEF6E7;
+  --r-sm:8px; --r-md:11px; --r-lg:18px; --r-pill:9999px;
+  font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--parchment);color:var(--ink);font-size:1rem;line-height:1.6;min-height:100vh}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--blue-focus);outline-offset:2px}
+svg.i{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+header{position:sticky;top:0;z-index:20;height:60px;display:flex;align-items:center;gap:12px;padding:0 24px;
+  background:rgba(255,255,255,.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--hairline)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.0625rem;color:var(--ink);text-decoration:none}
+.logo img{width:32px;height:32px}
+header .sp{flex:1}
+#who{color:var(--muted);font-size:.875rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:40vw}
+main{max-width:880px;margin:0 auto;padding:24px 24px 80px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:0 18px;border-radius:var(--r-pill);border:1px solid var(--border);
+  background:var(--canvas);font-weight:600;font-size:.9375rem;cursor:pointer;text-decoration:none;color:var(--ink)}
+.btn:hover{background:var(--pearl)}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn.primary:hover{background:#0058B0}
+.btn.small{min-height:36px;padding:0 12px;font-size:.875rem}
+.btn.ghost{border-color:transparent;background:transparent}
+.btn.danger{color:var(--red)}
+.btn:disabled{opacity:.5;cursor:default}
+.card{background:var(--canvas);border-radius:var(--r-lg);padding:24px;margin-bottom:16px;border:1px solid var(--hairline)}
+.card h2{margin:0 0 4px;font-size:1.1875rem;display:flex;align-items:center;gap:8px}
+.card .lead{margin:0 0 16px;color:var(--muted);font-size:.9375rem}
+.num{display:inline-flex;width:26px;height:26px;border-radius:50%;background:var(--blue);color:#fff;font-size:.8125rem;align-items:center;justify-content:center;flex:none}
+.gate{text-align:center;padding:48px 24px}
+.gate h1{font-size:1.75rem;margin:0 0 8px}
+.gate p{color:var(--muted);margin:0 0 24px}
+.monthbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.monthbar .m{font-size:1.5rem;font-weight:700;min-width:150px;text-align:center}
+.monthbar .sp{flex:1}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:var(--r-pill);padding:4px 12px;font-size:.8125rem;font-weight:600;background:var(--parchment);color:var(--muted)}
+.pill.on{background:var(--green-soft);color:var(--green)}
+.pill.off{background:var(--amber-soft);color:var(--amber)}
+.pill .dot{width:8px;height:8px;border-radius:50%;background:currentColor}
+.kinds{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.kinds button{min-height:36px;padding:0 14px;border-radius:var(--r-pill);border:1px solid var(--border);background:var(--canvas);cursor:pointer;font-size:.875rem}
+.kinds button[aria-pressed="true"]{background:var(--blue-soft);border-color:var(--blue);color:var(--blue);font-weight:600}
+.drop{border:2px dashed var(--border);border-radius:var(--r-md);padding:20px;text-align:center;color:var(--muted);cursor:pointer;background:var(--pearl)}
+.drop.over{border-color:var(--blue);background:var(--blue-soft);color:var(--blue)}
+.drop strong{color:var(--ink)}
+.row{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap}
+textarea,input[type=text]{width:100%;border:1px solid var(--border);border-radius:var(--r-md);padding:10px 12px;background:var(--canvas);resize:vertical}
+textarea{min-height:84px}
+label.f{display:block;font-weight:600;font-size:.875rem;margin:12px 0 6px}
+.hint{color:var(--muted);font-size:.8125rem;margin-top:4px}
+ul.list{list-style:none;margin:12px 0 0;padding:0}
+ul.list li{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--hairline)}
+ul.list li:first-child{border-top:none}
+.ic{width:36px;height:36px;border-radius:10px;background:var(--parchment);display:flex;align-items:center;justify-content:center;color:var(--muted);flex:none}
+.meta{flex:1;min-width:0}
+.meta .t{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta .s{color:var(--muted);font-size:.8125rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tag{display:inline-block;font-size:.75rem;font-weight:600;padding:1px 8px;border-radius:var(--r-pill);background:var(--blue-soft);color:var(--blue);margin-right:6px}
+.empty{color:var(--muted);font-size:.9375rem;padding:8px 0}
+.job{border-radius:var(--r-md);padding:14px 16px;margin-top:12px;display:flex;gap:12px;align-items:flex-start}
+.job.run{background:var(--blue-soft);color:#0B4A8A}
+.job.ok{background:var(--green-soft);color:#14532D}
+.job.bad{background:var(--red-soft);color:#7F1D1D}
+.job .meta .s{color:inherit;opacity:.8;white-space:normal}
+.spin{width:20px;height:20px;border:3px solid rgba(0,102,204,.25);border-top-color:var(--blue);border-radius:50%;animation:sp 1s linear infinite;flex:none;margin-top:2px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.sum{white-space:pre-wrap;font-size:.8125rem;color:var(--muted);margin-top:4px;background:var(--pearl);border-radius:var(--r-sm);padding:8px 10px}
+details summary{cursor:pointer;font-weight:600}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1D1D1F;color:#fff;padding:12px 18px;border-radius:var(--r-md);font-size:.9375rem;z-index:50;max-width:calc(100% - 32px);box-shadow:0 6px 24px rgba(0,0,0,.2)}
+.mh{font-size:.8125rem;font-weight:700;color:var(--muted);margin:16px 0 0}
+.btn,.logo{white-space:nowrap}
+@media (max-width:600px){
+  header{padding:0 16px;gap:6px}
+  #who{display:none}
+  header .btn{padding:0 10px}
+  main{padding:16px 16px 80px}
+  .card{padding:18px 16px}
+  .monthbar .m{font-size:1.25rem;min-width:120px}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></symbol>
+  <symbol id="i-img" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 17-5-5-9 8"/></symbol>
+  <symbol id="i-text" viewBox="0 0 24 24"><path d="M5 6h14M5 11h14M5 16h9"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 20V9m0 0-4 4m4-4 4 4M5 4h14"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></symbol>
+</svg>
+<header>
+  <a class="logo" href="./"><img src="icon.svg" alt="">방과후 일지</a>
+  <span class="sp"></span>
+  <span id="who"></span>
+  <a class="btn small ghost" href="help.html" target="_blank" rel="noopener">도움말</a>
+  <button class="btn small" id="logout" hidden>로그아웃</button>
+</header>
+<main>
+  <section class="card gate" id="gate" hidden>
+    <h1>방과후 운영 일지</h1>
+    <p>식단표·일정 사진과 메모를 올리고 달을 골라 <b>생성하기</b>를 누르면<br>연결된 PC가 한 달 일지(한글 파일)를 만들어 여기에 올려 줘요.</p>
+    <a class="btn primary" id="loginBtn" href="https://heoworks.pages.dev/#login=alog">HEO Works 계정으로 로그인</a>
+    <p class="hint" style="margin-top:16px">관리자가 허용한 계정만 쓸 수 있어요.</p>
+  </section>
+
+  <div id="app" hidden>
+    <div class="monthbar">
+      <button class="btn small" id="prevM" aria-label="이전 달"><svg class="i"><use href="#i-left"/></svg></button>
+      <div class="m" id="mLabel" aria-live="polite"></div>
+      <button class="btn small" id="nextM" aria-label="다음 달"><svg class="i"><use href="#i-right"/></svg></button>
+      <span class="sp"></span>
+      <span class="pill" id="pc"><span class="dot"></span><span id="pcText">PC 확인 중</span></span>
+    </div>
+
+    <section class="card">
+      <h2><span class="num">1</span>자료 올리기</h2>
+      <p class="lead">이 달의 식단표·일정 사진, 관찰 메모, 참고할 한글 파일을 올려 두세요. 올린 자료는 PC가 내려받아 기억해요.</p>
+      <div class="kinds" id="kinds" role="group" aria-label="자료 종류">
+        <button type="button" data-k="menu" aria-pressed="true">식단표</button>
+        <button type="button" data-k="plan" aria-pressed="false">일정·계획</button>
+        <button type="button" data-k="memo" aria-pressed="false">관찰 메모</button>
+        <button type="button" data-k="ref" aria-pressed="false">참고 자료</button>
+        <button type="button" data-k="etc" aria-pressed="false">기타</button>
+      </div>
+      <div class="drop" id="drop" tabindex="0" role="button" aria-label="파일 고르기">
+        <svg class="i" style="width:28px;height:28px"><use href="#i-up"/></svg><br>
+        <strong>사진·파일을 끌어다 놓거나 눌러서 고르기</strong><br>
+        <span class="hint">사진(JPG·PNG), PDF, 한글(.hwp·.hwpx), 글(.txt) · 한 파일 약 500KB까지(사진은 자동으로 줄여요)</span>
+      </div>
+      <input type="file" id="file" multiple accept="image/*,.pdf,.hwp,.hwpx,.txt" hidden>
+      <details style="margin-top:12px">
+        <summary>글로 적어서 올리기</summary>
+        <textarea id="memo" placeholder="예) 9월 만들기: 잠자리, 허수아비 / 종이접기: 도토리, 감 / 게임: 엉덩이씨름, 딱지치기" maxlength="20000"></textarea>
+        <div class="row" style="margin-top:8px"><button class="btn small" id="memoSave">이 글을 자료로 올리기</button></div>
+      </details>
+      <ul class="list" id="files"></ul>
+    </section>
+
+    <section class="card">
+      <h2><span class="num">2</span>생성하기</h2>
+      <p class="lead">요청사항을 적고 누르면 PC가 자료와 지난 일지를 바탕으로 이 달 일지를 만들어요. 이미 만든 달이면 그 일지를 고쳐요.</p>
+      <label class="f" for="note">요청사항</label>
+      <textarea id="note" maxlength="2000" placeholder="예) 관찰 시간은 4시 이후로, 간식 먹는 장면은 빼 주세요. 10/6은 재량휴업일이에요."></textarea>
+      <div class="row" style="margin-top:12px">
+        <button class="btn primary" id="gen"><svg class="i"><use href="#i-spark"/></svg><span id="genText">생성하기</span></button>
+      </div>
+      <div id="jobBox"></div>
+    </section>
+
+    <section class="card">
+      <h2><span class="num">3</span>만든 일지</h2>
+      <p class="lead">달마다 최근 10개까지 보관해요. 받은 .hwpx 파일은 한글에서 바로 열려요.</p>
+      <div id="outs"></div>
+    </section>
+
+    <section class="card">
+      <details id="cfgBox">
+        <summary>학급 정보 (학급명·아이 명단·늘 지킬 요청)</summary>
+        <label class="f" for="cCls">학급명</label><input type="text" id="cCls" maxlength="40" placeholder="예) 예쁜 2반">
+        <label class="f" for="cTeacher">담당자</label><input type="text" id="cTeacher" maxlength="40">
+        <label class="f" for="cKids">아이 명단</label><textarea id="cKids" maxlength="1000" placeholder="쉼표나 줄바꿈으로 나눠서 (예: 권우주, 김도하, 김아린)"></textarea>
+        <div class="hint">비워 두면 지난달 일지의 명단을 써요.</div>
+        <label class="f" for="cRules">늘 지킬 요청</label><textarea id="cRules" maxlength="1000" placeholder="예) 관찰 장소는 행복2, 관찰 시간 16:00 이후, 간식 장면 쓰지 않기"></textarea>
+        <div class="row" style="margin-top:12px"><button class="btn small" id="cfgSave">학급 정보 저장</button></div>
+        <div id="adminBox" hidden>
+          <label class="f" for="cUsers">사용 허용 계정(관리자만)</label>
+          <input type="text" id="cUsers" placeholder="아이디를 쉼표로 (관리자는 늘 허용)">
+          <div class="row" style="margin-top:8px"><button class="btn small" id="usersSave">허용 계정 저장</button></div>
+        </div>
+      </details>
+    </section>
+  </div>
+</main>
+<div class="toast" id="toast" role="status" hidden></div>
+<script>
+const LOCALHOST = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+const ls = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const lset = (k, v) => { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
+const API = (LOCALHOST && ls('alog:api')) || 'https://exam-api.dawn-sea-4052.workers.dev';
+const PORTAL = (LOCALHOST && ls('alog:portal')) || 'https://heoworks.pages.dev/';
+const AK = 'alog:auth';
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+let auth = (() => { try { const a = JSON.parse(ls(AK) || 'null'); return a && a.token && a.exp > Date.now() ? a : null; } catch (e) { return null; } })();
+function setAuth(a) { auth = a; lset(AK, a ? JSON.stringify(a) : null); }
+const ERRS = {
+  network: '서버에 연결하지 못했어요', bad_token: '로그인이 끝났어요. 다시 로그인해 주세요', forbidden: '이 계정은 방과후 일지를 쓸 수 없어요(관리자에게 문의)',
+  sso_expired: '로그인 코드가 만료됐어요. 포털에서 다시 열어 주세요', bad_file: '파일을 올리지 못했어요(크기·형식)', bad_type: '지원하지 않는 파일이에요(사진·PDF·한글·글만)',
+  too_many: '이 달 자료가 너무 많아요(30개까지). 안 쓰는 자료를 지워 주세요', storage_full: '서버 저장 공간이 꽉 찼어요(관리자에게 문의)', req_limit: '오늘 할 수 있는 횟수를 다 썼어요',
+  busy: '이미 만드는 중인 일지가 있어요. 끝난 뒤 다시 눌러 주세요', bad_month: '달을 다시 골라 주세요', empty: '내용이 비어 있어요', not_found: '찾지 못했어요(이미 지워졌을 수 있어요)',
+};
+const errMsg = e => ERRS[e] || '오류가 났어요(' + e + ')';
+async function api(action, body) {
+  try {
+    const res = await fetch(API, { method: 'POST', body: JSON.stringify(Object.assign({ action }, body || {})), cache: 'no-store' });
+    const r = await res.json();
+    if (r && (r.error === 'bad_token') && action !== 'ssoRedeem') loggedOut();
+    return r || { ok: false, error: 'server' };
+  } catch (e) { return { ok: false, error: 'network' }; }
+}
+let toastT = 0;
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => (t.hidden = true), 3800); }
+
+/* ── 달 ── */
+const pad = n => String(n).padStart(2, '0');
+function defMonth() { const d = new Date(); if (d.getDate() >= 20) d.setMonth(d.getMonth() + 1, 1); return d.getFullYear() + '-' + pad(d.getMonth() + 1); }
+let month = (() => { const v = new URLSearchParams(location.search).get('m'); return /^20\d\d-(0[1-9]|1[0-2])$/.test(v || '') ? v : defMonth(); })();
+const mKo = m => { const [y, mm] = m.split('-'); return y + '년 ' + Number(mm) + '월'; };
+function shiftMonth(k) { const [y, m] = month.split('-').map(Number); const d = new Date(y, m - 1 + k, 1); month = d.getFullYear() + '-' + pad(d.getMonth() + 1); renderMonth(); load(); }
+function renderMonth() { $('#mLabel').textContent = mKo(month); $('#note').value = ls(noteKey()) || ''; }
+const noteKey = () => 'alog:note:' + (auth ? auth.user.id : '') + ':' + month;
+
+/* ── 상태 ── */
+const S = { files: [], jobs: [], outputs: [], pcOn: false, me: null };
+let kind = 'menu', pollT = 0;
+const KIND_KO = { menu: '식단표', plan: '일정·계획', memo: '관찰 메모', ref: '참고 자료', etc: '기타' };
+const fmtSize = n => n >= 1048576 ? (n / 1048576).toFixed(1) + 'MB' : Math.max(1, Math.round(n / 1024)) + 'KB';
+const fmtAt = t => { const d = new Date(t); return (d.getMonth() + 1) + '/' + d.getDate() + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()); };
+
+let loadSeq = 0;
+async function load() {
+  if (!auth) return;
+  const seq = ++loadSeq, want = month;   // 달을 빨리 넘기면 늦게 온 옛 달 응답이 화면을 덮지 않게
+  const r = await api('alogList', { token: auth.token, month: want });
+  if (seq !== loadSeq || want !== month) return;
+  if (!r.ok) {
+    if (r.error !== 'bad_token') toast(errMsg(r.error));
+    clearTimeout(pollT);
+    if (auth && S.jobs.some(j => j.status === 'queued' || j.status === 'running')) pollT = setTimeout(load, 10000);   // 잠깐 끊겨도 진행 확인은 계속
+    else $('#gen').disabled = false;
+    return;
+  }
+  Object.assign(S, { files: r.files, jobs: r.jobs, outputs: r.outputs, pcOn: r.pcOn });
+  render();
+}
+function iconFor(m) { return m.startsWith('image/') ? 'i-img' : m === 'text/plain' ? 'i-text' : 'i-file'; }
+function render() {
+  const pc = $('#pc'); pc.className = 'pill ' + (S.pcOn ? 'on' : 'off');
+  $('#pcText').textContent = S.pcOn ? 'PC 연결됨' : 'PC 꺼짐(켜지면 이어서 만들어요)';
+  $('#files').innerHTML = S.files.length ? S.files.map(f => `<li>
+      <span class="ic"><svg class="i"><use href="#${iconFor(f.mime)}"/></svg></span>
+      <div class="meta"><div class="t"><span class="tag">${esc(KIND_KO[f.kind] || f.kind)}</span>${esc(f.name)}</div>
+        <div class="s">${f.preview ? esc(f.preview.replace(/\s+/g, ' ')) : fmtSize(f.size) + ' · ' + fmtAt(f.at)}</div></div>
+      <button class="btn small ghost" data-get="${esc(f.id)}" aria-label="받기"><svg class="i"><use href="#i-down"/></svg></button>
+      <button class="btn small ghost danger" data-del="${esc(f.id)}" aria-label="지우기"><svg class="i"><use href="#i-x"/></svg></button></li>`).join('')
+    : '<li class="empty">아직 이 달 자료가 없어요. 식단표 사진부터 올려 보세요.</li>';
+  const job = S.jobs.find(j => j.month === month) || null;
+  const active = S.jobs.find(j => j.status === 'queued' || j.status === 'running') || null;
+  const box = $('#jobBox');
+  if (active) {
+    const mins = Math.max(0, Math.round((Date.now() - (active.takenAt || active.at)) / 60000));
+    box.innerHTML = `<div class="job run"><span class="spin"></span><div class="meta"><div class="t">${esc(mKo(active.month))} 일지 ${active.status === 'queued' ? '대기 중' : '만드는 중'}</div>
+      <div class="s">${active.status === 'queued' ? (S.pcOn ? 'PC가 곧 받아 가요' : 'PC가 꺼져 있어요. 켜지면 바로 시작해요') : esc(active.msg || '') + (mins ? ' · ' + mins + '분 지남' : '')}</div></div>
+      <button class="btn small" data-cancel="${esc(active.id)}">취소</button></div>`;
+  } else if (job && (job.status === 'fail' || job.status === 'done') && Date.now() - job.doneAt < 6 * 3600000) {
+    box.innerHTML = job.status === 'done'
+      ? `<div class="job ok"><div class="meta"><div class="t">완성했어요 (${fmtAt(job.doneAt)})</div><div class="s">아래 '만든 일지'에서 받으세요.</div></div></div>`
+      : `<div class="job bad"><div class="meta"><div class="t">만들지 못했어요</div><div class="s">${esc(job.msg)}</div></div></div>`;
+  } else box.innerHTML = '';
+  $('#gen').disabled = !!active;
+  $('#genText').textContent = active ? '만드는 중…' : (S.outputs.some(o => o.month === month) ? '다시 생성하기(고치기)' : '생성하기');
+  const mine = S.outputs.filter(o => o.month === month), others = S.outputs.filter(o => o.month !== month);
+  const li = o => `<li><span class="ic"><svg class="i"><use href="#i-file"/></svg></span>
+      <div class="meta"><div class="t">${esc(o.name)}</div><div class="s">${fmtAt(o.at)} · ${fmtSize(o.size)}</div>
+      ${o.summary ? `<details><summary class="hint">반영한 내용</summary><div class="sum">${esc(o.summary)}</div></details>` : ''}</div>
+      <button class="btn small primary" data-out="${esc(o.id)}"><svg class="i"><use href="#i-down"/></svg>받기</button>
+      <button class="btn small ghost danger" data-odel="${esc(o.id)}" aria-label="지우기"><svg class="i"><use href="#i-x"/></svg></button></li>`;
+  $('#outs').innerHTML = (mine.length ? `<ul class="list">${mine.map(li).join('')}</ul>` : `<p class="empty">${esc(mKo(month))} 일지는 아직 없어요.</p>`)
+    + (others.length ? `<p class="mh">다른 달</p><ul class="list">${others.slice(0, 12).map(o => li(o).replace('<div class="t">', `<div class="t"><span class="tag">${esc(mKo(o.month))}</span>`)).join('')}</ul>` : '');
+  clearTimeout(pollT);
+  if (active) pollT = setTimeout(load, 5000);
+}
+
+/* ── 올리기 ── */
+const FILE_MAX = 510000;   // 원본 바이트(서버 base64 70만 자 아래)
+function decodeText(buf) {   // 윈도 메모장 등 CP949(EUC-KR) 글도 깨지지 않게
+  try { return new TextDecoder('utf-8', { fatal: true }).decode(buf); } catch (e) { try { return new TextDecoder('euc-kr').decode(buf); } catch (x) { return new TextDecoder().decode(buf); } }
+}
+function b64(buf) { let s = ''; const a = new Uint8Array(buf); for (let i = 0; i < a.length; i += 0x8000) s += String.fromCharCode.apply(null, a.subarray(i, i + 0x8000)); return btoa(s); }
+async function imageJpeg(file) {
+  let bmp;
+  try { bmp = await createImageBitmap(file, { imageOrientation: 'from-image' }); }
+  catch (e) { const url = URL.createObjectURL(file); try { bmp = await new Promise((ok, no) => { const im = new Image(); im.onload = () => ok(im); im.onerror = no; im.src = url; }); } finally { setTimeout(() => URL.revokeObjectURL(url), 1000); } }
+  let long = 2000;
+  for (let round = 0; round < 6; round++) {
+    const k = Math.min(1, long / Math.max(bmp.width, bmp.height));
+    const c = document.createElement('canvas'); c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+    const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(bmp, 0, 0, c.width, c.height);
+    for (const q of [0.86, 0.76, 0.66]) {
+      const d = c.toDataURL('image/jpeg', q).split(',')[1];
+      if (d.length < 690000) return d;
+    }
+    long *= 0.8;
+  }
+  throw new Error('big');
+}
+async function upload(files) {
+  for (const f of files) {
+    const name = f.name || '파일';
+    toast(name + ' 올리는 중…');
+    let body = { token: auth.token, month, kind, name };
+    try {
+      if (/^image\//.test(f.type) || /\.(jpe?g|png|heic|heif|webp|gif|bmp)$/i.test(name)) body.data = await imageJpeg(f), body.name = name.replace(/\.[^.]+$/, '') + '.jpg';
+      else if (/\.txt$/i.test(name) || f.type === 'text/plain') body.text = decodeText(await f.arrayBuffer()).slice(0, 20000);
+      else if (/\.(pdf|hwp|hwpx)$/i.test(name)) { if (f.size > FILE_MAX) { toast(name + ': 파일이 너무 커요(약 500KB까지)'); continue; } body.data = b64(await f.arrayBuffer()); }
+      else { toast(name + ': ' + ERRS.bad_type); continue; }
+    } catch (e) { toast(name + (/\.hei[cf]$/i.test(name) ? ': 이 브라우저는 HEIC 사진을 못 열어요. 아이폰 설정 > 카메라 > 포맷에서 ‘높은 호환성’으로 찍거나 JPG로 바꿔 올려 주세요' : ': 읽지 못했어요(사진이 너무 크거나 형식이 달라요)')); continue; }
+    const r = await api('alogSave', body);
+    if (!r.ok) { toast(name + ': ' + errMsg(r.error)); if (r.error === 'bad_token') return; continue; }
+    toast(name + ' 올렸어요');
+  }
+  load();
+}
+function download(name, b64data, mime) {
+  const bin = atob(b64data), a = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) a[i] = bin.charCodeAt(i);
+  const url = URL.createObjectURL(new Blob([a], { type: mime || 'application/octet-stream' }));
+  const link = document.createElement('a'); link.href = url; link.download = name; document.body.appendChild(link); link.click(); link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+}
+
+/* ── 로그인 ── */
+function loggedOut() { if (!auth) return; setAuth(null); show(); toast(ERRS.bad_token); }
+function show() {
+  const on = !!auth;
+  $('#gate').hidden = on; $('#app').hidden = !on; $('#logout').hidden = !on;
+  $('#who').textContent = on ? (auth.user.name || auth.user.id) + ' 님' : '';
+  if (on) { renderMonth(); loadMe(); load(); }
+}
+async function loadMe() {
+  const r = await api('alogMe', { token: auth.token }); if (!r.ok) return;
+  S.me = r; const c = r.cfg || {};
+  $('#cCls').value = c.cls || ''; $('#cTeacher').value = c.teacher || ''; $('#cKids').value = c.kids || ''; $('#cRules').value = c.rules || '';
+  $('#adminBox').hidden = !r.admin; if (r.admin) $('#cUsers').value = (r.users || []).join(', ');
+}
+async function ssoFromHash() {
+  const m = location.hash.match(/^#sso=([A-Za-z0-9]{40})$/); if (!m) return;
+  history.replaceState(null, '', location.pathname + location.search);
+  const r = await api('ssoRedeem', { svc: 'alog', code: m[1] });
+  if (r.ok && r.token) { setAuth({ token: r.token, user: r.user, exp: Date.now() + 11.5 * 3600000 }); toast((r.user.name || r.user.id) + ' 님, 반가워요'); show(); }
+  else toast(errMsg(r.error));
+}
+
+/* ── 이벤트 ── */
+$('#loginBtn').href = PORTAL + '#login=alog';
+$('#prevM').onclick = () => shiftMonth(-1);
+$('#nextM').onclick = () => shiftMonth(1);
+$('#kinds').onclick = e => { const b = e.target.closest('button[data-k]'); if (!b) return; kind = b.dataset.k; $('#kinds').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); };
+$('#drop').onclick = () => $('#file').click();
+$('#drop').onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('#file').click(); } };
+$('#file').onchange = e => { const fs = [...e.target.files]; e.target.value = ''; if (fs.length) upload(fs); };
+['dragenter', 'dragover'].forEach(t => $('#drop').addEventListener(t, e => { e.preventDefault(); $('#drop').classList.add('over'); }));
+['dragleave', 'drop'].forEach(t => $('#drop').addEventListener(t, e => { e.preventDefault(); $('#drop').classList.remove('over'); }));
+$('#drop').addEventListener('drop', e => { const fs = [...(e.dataTransfer && e.dataTransfer.files || [])]; if (fs.length) upload(fs); });
+$('#memoSave').onclick = async () => {
+  const t = $('#memo').value.trim(); if (!t) return toast(ERRS.empty);
+  const r = await api('alogSave', { token: auth.token, month, kind, name: KIND_KO[kind] + ' 글', text: t });
+  if (!r.ok) return toast(errMsg(r.error));
+  $('#memo').value = ''; toast('글을 자료로 올렸어요'); load();
+};
+$('#note').oninput = () => lset(noteKey(), $('#note').value || null);
+$('#gen').onclick = async () => {
+  if (!S.files.length && !S.outputs.some(o => o.month === month) && !confirm('이 달 자료가 없어요. 지난달 일지와 요청사항만으로 만들까요?')) return;
+  $('#gen').disabled = true;
+  const r = await api('alogRequest', { token: auth.token, month, note: $('#note').value.trim() });
+  if (!r.ok) { $('#gen').disabled = false; return toast(errMsg(r.error)); }
+  toast(r.pcOn ? 'PC에 보냈어요. 몇 분 걸려요' : 'PC가 꺼져 있어요. 켜지면 바로 만들어요');
+  load();
+};
+document.addEventListener('click', async e => {
+  const b = e.target.closest('button[data-get],button[data-del],button[data-out],button[data-odel],button[data-cancel]'); if (!b) return;
+  if (b.dataset.get) { const r = await api('alogGet', { token: auth.token, id: b.dataset.get }); if (!r.ok) return toast(errMsg(r.error));
+    if (r.mime === 'text/plain') download(r.name + '.txt', btoa(unescape(encodeURIComponent(r.data))), 'text/plain'); else download(r.name, r.data, r.mime); }
+  else if (b.dataset.del) { if (!confirm('이 자료를 지울까요?')) return; const r = await api('alogDel', { token: auth.token, id: b.dataset.del }); if (!r.ok) toast(errMsg(r.error)); load(); }
+  else if (b.dataset.out) { b.disabled = true; const r = await api('alogGet', { token: auth.token, id: b.dataset.out, what: 'out' }); b.disabled = false; if (!r.ok) return toast(errMsg(r.error)); download(r.name, r.data, 'application/hwp+zip'); }
+  else if (b.dataset.odel) { if (!confirm('이 일지 파일을 지울까요?')) return; const r = await api('alogDel', { token: auth.token, id: b.dataset.odel, what: 'out' }); if (!r.ok) toast(errMsg(r.error)); load(); }
+  else if (b.dataset.cancel) { if (!confirm('만들기를 취소할까요?')) return; const r = await api('alogCancel', { token: auth.token, id: b.dataset.cancel }); if (!r.ok) toast(errMsg(r.error)); load(); }
+});
+$('#cfgSave').onclick = async () => {
+  const r = await api('alogCfgSet', { token: auth.token, cfg: { cls: $('#cCls').value, teacher: $('#cTeacher').value, kids: $('#cKids').value, rules: $('#cRules').value } });
+  toast(r.ok ? '학급 정보를 저장했어요' : errMsg(r.error));
+};
+$('#usersSave').onclick = async () => {
+  const ids = $('#cUsers').value.split(/[\s,]+/).filter(Boolean);
+  const r = await api('alogUsersSet', { token: auth.token, ids });
+  if (r.ok) { $('#cUsers').value = r.users.join(', '); toast('허용 계정을 저장했어요'); } else toast(errMsg(r.error));
+};
+$('#logout').onclick = () => { const t = auth && auth.token; setAuth(null); show(); if (t) api('alogLogout', { token: t }); };
+addEventListener('storage', e => { if (e.key === AK) { try { auth = JSON.parse(e.newValue || 'null'); } catch (x) { auth = null; } show(); } });
+addEventListener('hashchange', ssoFromHash);
+document.addEventListener('visibilitychange', () => { if (!document.hidden && auth) load(); });
+show();
+ssoFromHash();
+</script>
+</body>
+</html>
