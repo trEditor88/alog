@@ -277,7 +277,7 @@ async function load() {
   if (!r.ok) {
     if (r.error !== 'bad_token') toast(errMsg(r.error));
     clearTimeout(pollT);
-    if (auth && S.jobs.some(j => j.status === 'queued' || j.status === 'running')) pollT = setTimeout(load, 10000);   // 잠깐 끊겨도 진행 확인은 계속
+    if (auth && S.jobs.some(j => j.status === 'queued' || j.status === 'running')) pollT = setTimeout(load, document.hidden ? 60000 : 10000);   // 잠깐 끊겨도 진행 확인은 계속
     else $('#gen').disabled = false;
     return;
   }
@@ -319,7 +319,8 @@ function render() {
   $('#outs').innerHTML = (mine.length ? `<ul class="list">${mine.map(li).join('')}</ul>` : `<p class="empty">${esc(mKo(month))} 일지는 아직 없어요.</p>`)
     + (others.length ? `<p class="mh">다른 달</p><ul class="list">${others.slice(0, 12).map(o => li(o).replace('<div class="t">', `<div class="t"><span class="tag">${esc(mKo(o.month))}</span>`)).join('')}</ul>` : '');
   clearTimeout(pollT);
-  if (active) pollT = setTimeout(load, 5000);
+  // PC 가 꺼져 있거나(대기·멈춘 실행 모두) 탭이 숨겨져 있으면 천천히(보이게 되면 visibilitychange 가 바로 다시 불러옴, 2026-10-21)
+  if (active) pollT = setTimeout(load, document.hidden ? 60000 : !S.pcOn ? 30000 : 5000);
 }
 
 /* ── 올리기 ── */
