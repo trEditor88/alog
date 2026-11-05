@@ -227,7 +227,7 @@ details summary{cursor:pointer;font-weight:600}
 const LOCALHOST = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
 const ls = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
 const lset = (k, v) => { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
-const API = (LOCALHOST && ls('alog:api')) || 'https://exam-api.dawn-sea-4052.workers.dev';
+const API = (LOCALHOST && ls('alog:api')) || 'https://heoworks.pages.dev/api';
 const AK = 'alog:auth';
 const $ = s => document.querySelector(s);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
